@@ -4,20 +4,30 @@ import os
 from typing import List, Optional
 
 import chromadb
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings
 
-from config import CHROMA_PERSIST_DIR, EMBEDDING_MODEL, TOP_K
+from config import CHROMA_PERSIST_DIR, TOP_K
 
 
-def get_embeddings() -> HuggingFaceEmbeddings:
-    """Create the embedding model instance (local, no API key needed)."""
-    return HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL,
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": True},
-    )
+class ChromaDefaultEmbeddings(Embeddings):
+    """Wrap ChromaDB's default ONNX embeddings for LangChain compatibility."""
+
+    def __init__(self):
+        self._fn = DefaultEmbeddingFunction()
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        return self._fn(texts)
+
+    def embed_query(self, text: str) -> List[float]:
+        return self._fn([text])[0]
+
+
+def get_embeddings() -> ChromaDefaultEmbeddings:
+    """Create the embedding model instance (ONNX, no torch needed)."""
+    return ChromaDefaultEmbeddings()
 
 
 def create_vector_store(
