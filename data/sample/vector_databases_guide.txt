@@ -1,0 +1,124 @@
+Vector Databases: Architecture and Best Practices
+
+1. What is a Vector Database?
+
+A vector database is a specialized database designed to store, index, and query
+high-dimensional vector embeddings efficiently. Unlike traditional databases that
+use exact matching, vector databases use approximate nearest neighbor (ANN)
+algorithms to find similar vectors.
+
+2. Core Concepts
+
+2.1 Embeddings
+Embeddings are dense numerical representations of data (text, images, audio) in a
+continuous vector space. Similar items have vectors that are close together in this space.
+
+Embedding dimensions by model:
+- OpenAI text-embedding-3-small: 1536 dimensions
+- OpenAI text-embedding-3-large: 3072 dimensions
+- Cohere embed-english-v3.0: 1024 dimensions
+- sentence-transformers/all-MiniLM-L6-v2: 384 dimensions
+- BAAI/bge-large-en-v1.5: 1024 dimensions
+
+2.2 Similarity Metrics
+- Cosine Similarity: Measures angle between vectors (most common for text)
+- Euclidean Distance (L2): Measures straight-line distance
+- Dot Product: Measures magnitude and direction alignment
+- Manhattan Distance (L1): Sum of absolute differences
+
+2.3 Indexing Algorithms
+- HNSW (Hierarchical Navigable Small World): O(log n) search, high recall
+  - Best for: datasets < 100M vectors, when recall matters most
+  - Memory: ~1.5x vector storage
+- IVF (Inverted File Index): Clusters vectors, searches nearest clusters
+  - Best for: large datasets, when memory is constrained
+  - Variants: IVF-Flat, IVF-PQ, IVF-SQ
+- ANNOY (Approximate Nearest Neighbors Oh Yeah): Tree-based, read-only
+  - Best for: static datasets, multiple tree searches
+- ScaNN (Scalable Nearest Neighbors): Google's ANN algorithm
+  - Best for: very large datasets on Google Cloud
+
+3. Popular Vector Databases Compared
+
+3.1 Pinecone
+- Type: Fully managed cloud service
+- Pricing: Serverless from $0.33/1M reads
+- Max vectors: Billions (serverless)
+- Key features: Metadata filtering, namespaces, hybrid search
+- Best for: Production applications requiring zero ops
+- Limitations: No self-hosted option, vendor lock-in
+
+3.2 ChromaDB
+- Type: Open-source (Apache 2.0)
+- Pricing: Free (self-hosted), cloud offering available
+- Max vectors: ~10M (single node practical limit)
+- Key features: Simple API, Python-native, built-in embedding functions
+- Best for: Development, prototyping, small-medium datasets
+- Limitations: Not suitable for very large-scale production
+
+3.3 Weaviate
+- Type: Open-source (BSD-3)
+- Pricing: Free (self-hosted), managed cloud available
+- Max vectors: Billions (with proper infrastructure)
+- Key features: GraphQL API, modules ecosystem, multi-tenancy
+- Best for: Complex search applications, multi-modal data
+- Limitations: Higher operational complexity
+
+3.4 Qdrant
+- Type: Open-source (Apache 2.0)
+- Pricing: Free (self-hosted), cloud available
+- Max vectors: Billions
+- Key features: Rust-based high performance, payload filtering, gRPC API
+- Best for: High-performance self-hosted deployments
+- Limitations: Newer ecosystem, fewer integrations
+
+3.5 pgvector
+- Type: PostgreSQL extension (open-source)
+- Pricing: Free
+- Max vectors: Millions (depends on PostgreSQL instance)
+- Key features: SQL interface, ACID transactions, existing PostgreSQL tooling
+- Best for: Teams already using PostgreSQL, transactional requirements
+- Limitations: Performance ceiling vs. specialized vector DBs
+
+4. Performance Benchmarks
+
+Query latency (p99) for 1M vectors, 1536 dimensions:
+- Qdrant (HNSW, RAM): 3ms
+- Pinecone (Serverless): 5ms
+- Weaviate (HNSW): 7ms
+- ChromaDB (HNSW): 15ms
+- pgvector (IVFFlat): 25ms
+- pgvector (HNSW): 12ms
+
+Recall@10 for 1M vectors:
+- All HNSW-based: >0.99
+- IVFFlat (nprobe=10): ~0.95
+- ANNOY (n_trees=100): ~0.93
+
+5. Best Practices
+
+5.1 Embedding Best Practices
+- Normalize embeddings for cosine similarity
+- Use the same model for indexing and querying
+- Consider dimensionality reduction for storage efficiency
+- Batch embedding generation for throughput
+
+5.2 Chunking Strategy
+- Match chunk size to your expected query length
+- Include metadata (source, page number, section headers)
+- Use overlapping chunks to avoid information loss at boundaries
+- Consider parent-child chunking for hierarchical documents
+
+5.3 Production Recommendations
+- Implement health checks and monitoring
+- Use batch operations for bulk inserts
+- Set up backup and disaster recovery
+- Monitor embedding drift over time
+- Use metadata filtering to scope searches before vector similarity
+
+References:
+1. ANN-Benchmarks: https://ann-benchmarks.com/
+2. Malkov & Yashunin, "Efficient and robust approximate nearest neighbor search using
+   Hierarchical Navigable Small World graphs," 2018
+3. Pinecone Documentation, 2024
+4. ChromaDB Documentation, 2024

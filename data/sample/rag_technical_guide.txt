@@ -1,0 +1,125 @@
+Retrieval Augmented Generation (RAG): Technical Deep Dive
+
+1. Overview
+
+Retrieval Augmented Generation (RAG) is an AI framework that combines information retrieval
+with text generation to produce accurate, grounded responses. First introduced by Lewis et al.
+at Facebook AI Research (now Meta AI) in 2020, RAG has become the de facto standard for
+building knowledge-grounded AI applications.
+
+2. Architecture Components
+
+2.1 Document Processing Pipeline
+The document processing pipeline consists of:
+- Document Loading: Ingesting documents from various sources (PDF, HTML, databases)
+- Text Splitting: Chunking documents into smaller, semantically meaningful segments
+  - Recommended chunk sizes: 500-1500 tokens with 10-20% overlap
+  - Popular splitters: RecursiveCharacterTextSplitter, SemanticChunker
+- Embedding Generation: Converting text chunks into dense vector representations
+  - OpenAI text-embedding-3-small: 1536 dimensions, $0.02/1M tokens
+  - OpenAI text-embedding-3-large: 3072 dimensions, $0.13/1M tokens
+  - Cohere embed-v3: 1024 dimensions
+  - Open-source alternatives: BGE, E5, GTE
+
+2.2 Vector Database
+Vector databases store and index embeddings for efficient similarity search:
+- Pinecone: Fully managed, serverless, scales to billions of vectors
+- ChromaDB: Open-source, lightweight, great for development
+- Weaviate: Open-source with hybrid search capabilities
+- Qdrant: Open-source, written in Rust, high performance
+- pgvector: PostgreSQL extension for vector operations
+
+Performance comparison (approximate, 1M vectors):
+- Pinecone: ~5ms p99 latency, 99.99% uptime SLA
+- ChromaDB: ~15ms p99 latency, suitable for <10M vectors
+- Qdrant: ~8ms p99 latency, excellent for self-hosted deployments
+
+2.3 Retrieval Strategies
+- Dense Retrieval: Semantic similarity using vector embeddings
+- Sparse Retrieval: BM25/TF-IDF keyword matching
+- Hybrid Retrieval: Combining dense and sparse (e.g., Reciprocal Rank Fusion)
+- Re-ranking: Using cross-encoder models to re-score retrieved results
+  - Cohere Rerank: Top commercial re-ranker
+  - BGE-reranker-v2: Top open-source re-ranker
+
+3. Common RAG Failure Modes
+
+3.1 Retrieval Failures
+- Query-document mismatch: User query semantics don't align with document semantics
+- Insufficient context: Retrieved chunks are too small to contain complete answers
+- Irrelevant retrieval: Vector similarity returns semantically similar but factually
+  irrelevant documents
+
+3.2 Generation Failures
+- Hallucination: LLM generates information not present in retrieved context
+- Context window overflow: Too many retrieved chunks exceed the LLM's context limit
+- Lost in the middle: LLMs tend to ignore information in the middle of long contexts
+
+3.3 Measured Hallucination Rates (by framework):
+- Naive RAG: 15-25% hallucination rate on factual QA tasks
+- RAG with re-ranking: 8-15% hallucination rate
+- Self-correcting RAG: 2-5% hallucination rate
+- RAG with citation verification: 1-3% hallucination rate
+
+4. Advanced RAG Techniques
+
+4.1 Self-Correcting RAG (CRAG)
+Corrective RAG (CRAG) introduces a self-reflection mechanism:
+1. Generate initial answer
+2. Evaluate answer faithfulness against source documents
+3. If unfaithful, trigger corrective retrieval with refined queries
+4. Repeat until convergence or max iterations
+
+CRAG has been shown to reduce hallucination rates by 60-80% compared to naive RAG,
+with only a 2-3x increase in latency.
+
+4.2 Adaptive RAG
+Dynamically chooses between:
+- Direct LLM generation (for simple questions)
+- Single-step RAG (for straightforward factual questions)
+- Multi-step RAG (for complex, multi-hop questions)
+
+4.3 Graph RAG (Microsoft Research, 2024)
+Uses knowledge graphs to capture entity relationships:
+- Builds a graph index from documents
+- Enables multi-hop reasoning across entities
+- Particularly effective for summarization tasks
+- 50-70% improvement on global summarization benchmarks
+
+5. Evaluation Metrics
+
+Key metrics for RAG system evaluation:
+- Faithfulness: Does the answer stick to retrieved context? (Target: >0.95)
+- Answer Relevancy: Is the answer relevant to the question? (Target: >0.90)
+- Context Precision: Are the retrieved chunks relevant? (Target: >0.85)
+- Context Recall: Are all relevant chunks retrieved? (Target: >0.80)
+
+Evaluation frameworks:
+- RAGAS: Most popular open-source RAG evaluation framework
+- TruLens: Evaluation and tracking for LLM applications
+- DeepEval: Unit testing framework for LLMs
+
+6. Production Deployment Considerations
+
+6.1 Scaling
+- Embedding computation: Batch processing, GPU acceleration
+- Vector database: Sharding, replication, approximate nearest neighbors
+- LLM inference: Caching, streaming, load balancing
+
+6.2 Cost Optimization
+- Use smaller embedding models for initial retrieval
+- Cache frequent queries and their results
+- Implement tiered retrieval (cheap sparse search → expensive dense search)
+- Use smaller LLMs for critique/evaluation, larger for generation
+
+6.3 Monitoring
+- Track retrieval relevance scores over time
+- Monitor hallucination rates with automated evaluation
+- Log user feedback for continuous improvement
+- Alert on latency degradation
+
+References:
+1. Lewis et al., "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks," NeurIPS 2020
+2. Yan et al., "Corrective Retrieval Augmented Generation," arXiv 2024
+3. Edge et al., "From Local to Global: A Graph RAG Approach," Microsoft Research 2024
+4. Es et al., "RAGAS: Automated Evaluation of Retrieval Augmented Generation," 2023
