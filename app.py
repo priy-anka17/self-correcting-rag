@@ -37,7 +37,7 @@ st.markdown("""
 
     /* Header */
     .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #667eea 0%, #a78bfa 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-size: 2.8rem;
@@ -46,7 +46,7 @@ st.markdown("""
         letter-spacing: -0.5px;
     }
     .sub-header {
-        color: #6c757d;
+        color: #94a3b8;
         font-size: 1.1rem;
         margin-top: -10px;
         line-height: 1.6;
@@ -60,8 +60,8 @@ st.markdown("""
         margin: 20px 0;
     }
     .feature-card {
-        background: linear-gradient(145deg, #f8f9ff 0%, #f0f2ff 100%);
-        border: 1px solid #e0e4ff;
+        background: linear-gradient(145deg, #1e1e3a 0%, #1a1a2e 100%);
+        border: 1px solid #2d2d5e;
         border-radius: 12px;
         padding: 20px;
         text-align: center;
@@ -69,41 +69,43 @@ st.markdown("""
     }
     .feature-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
+        border-color: #667eea;
     }
     .feature-icon { font-size: 2rem; margin-bottom: 8px; }
-    .feature-title { font-weight: 700; font-size: 0.95rem; color: #333; margin-bottom: 4px; }
-    .feature-desc { font-size: 0.82rem; color: #666; line-height: 1.4; }
+    .feature-title { font-weight: 700; font-size: 0.95rem; color: #e2e8f0; margin-bottom: 4px; }
+    .feature-desc { font-size: 0.82rem; color: #94a3b8; line-height: 1.4; }
 
     /* Iteration cards */
     .iteration-card {
-        border: 1px solid #e0e0e0;
+        border: 1px solid #2d2d5e;
         border-radius: 12px;
         padding: 16px 20px;
         margin: 10px 0;
-        background: linear-gradient(135deg, #fafbfc 0%, #f5f6fa 100%);
+        background: linear-gradient(135deg, #1e1e3a 0%, #1a1a2e 100%);
+        color: #e2e8f0;
     }
 
     /* Verdict badges */
     .pass-badge {
-        background: linear-gradient(135deg, #d4edda, #c3e6cb);
-        color: #155724;
+        background: linear-gradient(135deg, #065f46, #047857);
+        color: #a7f3d0;
         padding: 5px 14px;
         border-radius: 20px;
         font-weight: 600;
         font-size: 0.85rem;
     }
     .fail-badge {
-        background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-        color: #721c24;
+        background: linear-gradient(135deg, #7f1d1d, #991b1b);
+        color: #fecaca;
         padding: 5px 14px;
         border-radius: 20px;
         font-weight: 600;
         font-size: 0.85rem;
     }
     .partial-badge {
-        background: linear-gradient(135deg, #fff3cd, #ffeeba);
-        color: #856404;
+        background: linear-gradient(135deg, #78350f, #92400e);
+        color: #fde68a;
         padding: 5px 14px;
         border-radius: 20px;
         font-weight: 600;
@@ -115,8 +117,9 @@ st.markdown("""
         text-align: center;
         padding: 15px;
         border-radius: 10px;
-        background: #f8f9fa;
-        border: 1px solid #e9ecef;
+        background: #1a1a2e;
+        border: 1px solid #2d2d5e;
+        color: #e2e8f0;
     }
 
     /* Tech stack badges */
@@ -133,11 +136,11 @@ st.markdown("""
 
     /* Sidebar polish */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 100%);
+        background: linear-gradient(180deg, #1a1a2e 0%, #0e1117 100%);
     }
 
     .stExpander {
-        border: 1px solid #e0e4ff;
+        border: 1px solid #2d2d5e;
         border-radius: 12px;
     }
 </style>
