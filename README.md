@@ -2,10 +2,14 @@
 
 > Enterprise-grade Retrieval Augmented Generation with built-in hallucination detection and self-correction.
 
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Streamlit_Cloud-FF4B4B?style=for-the-badge)](https://self-correcting-rag.streamlit.app)
+
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-red.svg)](https://streamlit.io)
 [![LangChain](https://img.shields.io/badge/LangChain-0.2+-green.svg)](https://langchain.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+### [▶️ Try the Live Demo](https://self-correcting-rag.streamlit.app)
 
 ## The Problem
 
@@ -77,7 +81,7 @@ This system implements **Corrective RAG (CRAG)** — a self-reflection loop wher
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/yourusername/self-correcting-rag.git
+git clone https://github.com/priy-anka17/self-correcting-rag.git
 cd self-correcting-rag
 pip install -r requirements.txt
 ```
@@ -169,6 +173,22 @@ The system runs up to 3 iterations, selecting the best answer by confidence scor
 - **Change LLM**: Update `LLM_MODEL` in `.env` (supports any Groq-hosted model like `llama-3.3-70b-versatile`, `mixtral-8x7b-32768`)
 - **Add Evaluation**: Integrate RAGAS for automated benchmarking
 - **Add Re-ranking**: Add Cohere Rerank in the retrieval pipeline
+
+## 🚀 Live Demo
+
+**[Try it live on Streamlit Cloud →](https://self-correcting-rag.streamlit.app)**
+
+No installation needed — just enter your free [Groq API key](https://console.groq.com/keys) in the sidebar and start asking questions.
+
+## Deploy Your Own
+
+Deploy to Streamlit Cloud for free in 3 clicks:
+
+1. Fork this repo
+2. Go to [share.streamlit.io](https://share.streamlit.io) → **New app**
+3. Select your fork, set main file to `app.py`, and click **Deploy**
+
+That's it! The app uses sidebar API key input, so no secrets configuration needed.
 
 ## License
 
